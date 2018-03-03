@@ -120,5 +120,8 @@ public class FindAnagrames {
         for (int i: findAnagrams(s, p)) {
             System.out.println(i);
         }
+        for (int i: findAnagramsImprove(s, p)) {
+            System.out.println(i);
+        }
     }
 }
