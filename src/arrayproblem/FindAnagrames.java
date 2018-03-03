@@ -94,13 +94,13 @@ public class FindAnagrames {
         }
         int count = p.length();
         int[] sCounts = new int[128];
-
         final char[] sChars = s.toCharArray();
         int start = 0;
         for (int i = 0; i < sChars.length; i++) {
             final char c = sChars[i];
             sCounts[c]++;
             count--;
+            //find start
             while (sCounts[c] > counts[c]) {
                 sCounts[sChars[start++]]--;
                 count++;
