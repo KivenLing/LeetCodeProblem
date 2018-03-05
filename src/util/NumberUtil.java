@@ -10,7 +10,10 @@ public class NumberUtil {
     }
 
     //判断素数，并保存在集合中，使用于处理判断大量的数字，含有递归，自动更新primeSet
+    //这里Set应该使用有序的TreeSet
     public static boolean isPrime(int num, Set<Integer> primeSet) {
+        if (primeSet.isEmpty())
+            primeSet.add(2);
         if (primeSet.contains(num))
             return true;
         int end = (int) Math.sqrt(num);
