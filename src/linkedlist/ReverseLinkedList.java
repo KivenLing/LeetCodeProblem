@@ -40,7 +40,6 @@ public class ReverseLinkedList {
         int pos = 1;
         //将curNode指向开始反转的node
         while (pos < m && curNode != null){
-            ListNode tempNode = curNode;
             preNode = curNode;
             curNode = curNode.next;
             pos++;
