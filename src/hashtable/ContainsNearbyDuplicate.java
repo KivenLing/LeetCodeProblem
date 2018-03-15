@@ -91,7 +91,11 @@ public class ContainsNearbyDuplicate {
         for (int i = 0; i < nums.length; i++) {
             long remappedNum = (long) nums[i] - Integer.MIN_VALUE;
             long bucket = remappedNum / ((long) t + 1);
-            if (map.containsKey(bucket) || (map.containsKey(bucket - 1) && remappedNum - map.get(bucket - 1) <= t) || (map.containsKey(bucket + 1) && map.get(bucket + 1) - remappedNum <= t)) {
+            if (map.containsKey(bucket) ||
+                    (map.containsKey(bucket - 1) &&
+                            remappedNum - map.get(bucket - 1) <= t) ||
+                    (map.containsKey(bucket + 1) &&
+                            map.get(bucket + 1) - remappedNum <= t)) {
                 return true;
             }
             if (map.entrySet().size() >= k) {
