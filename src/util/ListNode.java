@@ -1,6 +1,6 @@
 package util;
 
-public class ListNode {
+public class ListNode implements Comparable<ListNode>{
     public int val;
     public ListNode next;
     public ListNode(){ }
@@ -36,5 +36,16 @@ public class ListNode {
         }
         s.append("NULL");
         return s.toString();
+    }
+
+    @Override
+    public int compareTo(ListNode o) {
+        if (val > o.val)
+            return 1;
+        else if (val < o.val){
+            return -1;
+        }else {
+            return 0;
+        }
     }
 }
