@@ -35,7 +35,7 @@ public class MinHeap {
         data[j] = t;
     }
 
-    public ListNode extractMax(){
+    public ListNode extractMin(){
         assert count > 0;
         ListNode ret = data[1];
 
@@ -46,7 +46,7 @@ public class MinHeap {
         return ret;
     }
 
-    public ListNode getMax(){
+    public ListNode getMin(){
         assert( count > 0 );
         return data[1];
     }
