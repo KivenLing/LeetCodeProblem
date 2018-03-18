@@ -41,7 +41,6 @@ public class ReverseLinkedList {
         ListNode curNode = head;
         int pos = 1;
         while (pos < m && curNode != null){
-            ListNode tempNode = curNode;
             preNode = curNode;
             curNode = curNode.next;
             pos++;
