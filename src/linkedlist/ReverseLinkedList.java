@@ -6,7 +6,7 @@ import util.ListNode;
 public class ReverseLinkedList {
     // ID： 206
     // reverse List
-    public ListNode reverseList(ListNode head) {
+    public static ListNode reverseList(ListNode head) {
         if(head == null || head.next == null)
             return head;
         ListNode tempNode = head;
