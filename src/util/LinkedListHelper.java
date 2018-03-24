@@ -12,7 +12,7 @@ public class LinkedListHelper {
         }
         return head;
     }
-    
+
     public static int sizeOfNode(ListNode head){
         int size = 0;
         while (head != null){
@@ -20,5 +20,14 @@ public class LinkedListHelper {
             head = head.next;
         }
         return size;
+    }
+
+    public static ListNode getLastNode(ListNode head){
+        if (head == null)
+            return null;
+        while (head.next != null){
+            head = head.next;
+        }
+        return head;
     }
 }
