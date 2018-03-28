@@ -18,7 +18,7 @@ public class BinaryTreeTraversal {
         commands.push(new Command("go", root));
         while (!commands.isEmpty()){
             Command c = commands.pop();
-            if (c.order == "print"){
+            if (c.order.equals("print")){
                 res.add(c.treeNode.val);
             }else {
                 if (c.treeNode.right != null)
@@ -40,7 +40,7 @@ public class BinaryTreeTraversal {
         commands.push(new Command("go", root));
         while (!commands.isEmpty()){
             Command c = commands.pop();
-            if (c.order == "print"){
+            if (c.order.equals("print")){
                 res.add(c.treeNode.val);
             }else {
                 if (c.treeNode.right != null)
@@ -62,7 +62,7 @@ public class BinaryTreeTraversal {
         commands.push(new Command("go", root));
         while (!commands.isEmpty()){
             Command c = commands.pop();
-            if (c.order == "print"){
+            if (c.order.equals("print")){
                 res.add(c.treeNode.val);
             }else {
                 commands.push(new Command("print", c.treeNode));
