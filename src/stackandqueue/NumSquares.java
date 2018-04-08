@@ -1,6 +1,5 @@
-package linkedlist;
+package stackandqueue;
 
-import sun.plugin.javascript.navig.Array;
 import util.Pair;
 
 import java.util.Arrays;
