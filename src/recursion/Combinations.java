@@ -27,13 +27,7 @@ public class Combinations {
             return ans;
         }
         List<Integer> selected = new LinkedList<>();
-        //选择这0号元素,在剩下元素选n - 1个
-        selected.add(nums.get(0));
-        combination(ans, selected, nums.subList(1, nums.size()), n - 1);
-
-        //不选择0号元素，剩下选n个
-        selected.remove(selected.size() - 1);
-        combination(ans, selected, nums.subList(1, nums.size()), n);
+        combination(ans, selected, nums, n);
         return ans;
     }
 
