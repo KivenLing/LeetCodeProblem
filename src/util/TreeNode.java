@@ -1,7 +1,7 @@
 package util;
 
-public class TreeNode {
-    public int val;
+public class TreeNode<T> {
+    public T val;
     public TreeNode left;
     public TreeNode right;
 
@@ -9,7 +9,7 @@ public class TreeNode {
 
     }
 
-    public TreeNode(int val) {
+    public TreeNode(T val) {
         this.val = val;
     }
 }
