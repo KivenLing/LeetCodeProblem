@@ -7,6 +7,9 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Stack;
 
+/**
+ * ID:102 107 103 199
+ */
 public class BinaryTreeTraversal {
     /*
     ID:144
@@ -18,7 +21,7 @@ public class BinaryTreeTraversal {
         Stack<Command> commands = new Stack<>();
         commands.push(new Command("go", root));
         while (!commands.isEmpty()){
-            Command c = commands.pop();
+            Command<Integer> c = commands.pop();
             if (c.order.equals("print")){
                 res.add(c.treeNode.val);
             }else {
@@ -40,7 +43,7 @@ public class BinaryTreeTraversal {
         Stack<Command> commands = new Stack<>();
         commands.push(new Command("go", root));
         while (!commands.isEmpty()){
-            Command c = commands.pop();
+            Command<Integer> c = commands.pop();
             if (c.order.equals("print")){
                 res.add(c.treeNode.val);
             }else {
@@ -62,7 +65,7 @@ public class BinaryTreeTraversal {
         Stack<Command> commands = new Stack<>();
         commands.push(new Command("go", root));
         while (!commands.isEmpty()){
-            Command c = commands.pop();
+            Command<Integer> c = commands.pop();
             if (c.order.equals("print")){
                 res.add(c.treeNode.val);
             }else {
@@ -86,7 +89,7 @@ public class BinaryTreeTraversal {
     For example:
     Given binary tree [3,9,20,null,null,15,7],
      */
-    public static List<List<Integer>> levelOrder(TreeNode root) {
+    public static List<List<Integer>> levelOrder(TreeNode<Integer> root) {
         List<List<Integer>> ans = new ArrayList<>();
         if (root == null)
             return ans;
@@ -97,7 +100,7 @@ public class BinaryTreeTraversal {
             List<Integer> leverNodes = new ArrayList<>();
             int size = queue.size();
             while (index < size){
-                TreeNode curNode = queue.get(index);
+                TreeNode<Integer> curNode = queue.get(index);
                 leverNodes.add(curNode.val);
                 if (curNode.left != null)
                     queue.add(curNode.left);
@@ -116,7 +119,7 @@ public class BinaryTreeTraversal {
     of its nodes' values. (ie, from left to right, level by level
     from leaf to root).
      */
-    public static List<List<Integer>> levelOrderBottom(TreeNode root) {
+    public static List<List<Integer>> levelOrderBottom(TreeNode<Integer> root) {
         List<List<Integer>> ans = new LinkedList<>();
         if (root == null)
             return ans;
@@ -127,7 +130,7 @@ public class BinaryTreeTraversal {
             List<Integer> level = new ArrayList<>();
             int size = queue.size();
             while (index < size){
-                TreeNode curNode = queue.get(index);
+                TreeNode<Integer> curNode = queue.get(index);
                 level.add(curNode.val);
                 if (curNode.left != null)
                     queue.add(curNode.left);
@@ -146,7 +149,7 @@ public class BinaryTreeTraversal {
     of its nodes' values. (ie, from left to right, then right to
     left for the next level and alternate between).
      */
-    public static List<List<Integer>> zigzagLevelOrder(TreeNode root) {
+    public static List<List<Integer>> zigzagLevelOrder(TreeNode<Integer> root) {
         List<List<Integer>> ans = new ArrayList<>();
         if (root == null)
             return ans;
@@ -158,7 +161,7 @@ public class BinaryTreeTraversal {
             List<Integer> leverNodes = new LinkedList<>();
             int size = queue.size();
             while (index < size){
-                TreeNode curNode = queue.get(index);
+                TreeNode<Integer> curNode = queue.get(index);
                 if (count % 2 == 0)
                     leverNodes.add(curNode.val);
                 else
@@ -189,11 +192,11 @@ public class BinaryTreeTraversal {
     5     4       <---
     You should return [1, 3, 4].
      */
-    public static List<Integer> rightSideView(TreeNode root) {
+    public static List<Integer> rightSideView(TreeNode<Integer> root) {
         List<Integer> res = new ArrayList<>();
         if (root == null)
             return res;
-        List<TreeNode> queue = new ArrayList<>();
+        List<TreeNode<Integer>> queue = new ArrayList<>();
         int index = 0;
         queue.add(root);
         while (index < queue.size()){
@@ -211,18 +214,18 @@ public class BinaryTreeTraversal {
         return res;
     }
     public static void main(String[] args){
-        TreeNode root = new TreeNode(1);
-        TreeNode left = new TreeNode(2);
-        TreeNode right = new TreeNode(3);
+        TreeNode<Integer> root = new TreeNode(1);
+        TreeNode<Integer> left = new TreeNode(2);
+        TreeNode<Integer> right = new TreeNode(3);
         root.left = left;
         root.right = right;
         List<List<Integer>> ans = levelOrderBottom(root);
     }
 }
 
-class Command{
+class Command<T>{
     String order;
-    TreeNode treeNode;
+    TreeNode<T> treeNode;
     public Command(String order, TreeNode treeNode){
         this.order = order;
         this.treeNode = treeNode;
