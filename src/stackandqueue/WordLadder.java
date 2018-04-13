@@ -1,6 +1,8 @@
 package stackandqueue;
 
 import util.Pair;
+import util.PrintUtil;
+import util.ReadCase;
 
 import java.util.*;
 
@@ -243,10 +245,102 @@ public class WordLadder {
      */
     public static List<List<String>> findLadders(String beginWord, String endWord, List<String> wordList) {
         List<List<String>> ans = new ArrayList<>();
-
+        Set<String> words = new HashSet<>(wordList);
+        if (!words.contains(endWord))
+            return ans;
+        words.remove(endWord);
+        if (words.contains(beginWord))
+            words.remove(beginWord);
+        Map<String, List<String>> fromBegin = new HashMap<>();
+        Map<String, List<String>> fromEnd = new HashMap<>();
+        List<String> beginPath = new ArrayList<>();
+        beginPath.add(beginWord);
+        List<String> endPath = new ArrayList<>();
+        endPath.add(endWord);
+        fromBegin.put(beginWord, beginPath);
+        fromEnd.put(endWord, endPath);
+        //bug map键值重复，覆盖原来路径
+        while (!fromBegin.isEmpty() && !fromEnd.isEmpty()){
+            if (fromBegin.size() < fromEnd.size()){
+                if (convert(fromBegin, fromEnd, words, ans, true))
+                    return ans;
+            }else {
+                if (convert(fromEnd, fromBegin, words, ans, false))
+                    return ans;
+            }
+        }
         return ans;
     }
+
+    private static boolean convert(Map<String, List<String>> from, Map<String, List<String>> to, Set<String> words, List<List<String>> ans, boolean isOrder){
+        List<String> nodes = new ArrayList<>(from.keySet());
+        //最后需要在另外一段删除的节点，
+ //       List<String> dest = new LinkedList<>();
+        //遍历节点
+        for (String node : nodes) {
+            char[] nodeChars = node.toCharArray();
+            for (int i = 0; i < nodeChars.length; i++){
+                char origin = nodeChars[i];
+                for (char c = 'a'; c <= 'z'; c++) {
+                    if (c == origin)
+                        continue;
+                    nodeChars[i] = c;
+                    String next = new String(nodeChars);
+                    //连接成功
+                    if (to.containsKey(next)){
+                        List<String> path1 = from.get(node);
+                        List<String> path2 = to.get(next);
+                        //dest.add(next);
+                        ans.add(getPath(path1, path2, isOrder));
+                        continue;
+                    }
+                    //下一个节点
+                    if (words.contains(next)){
+                        List<String> path = copyStringList(from.get(node));
+                        path.add(next);
+                        from.put(next, path);
+                        words.remove(next);
+                    }
+                }
+                nodeChars[i] = origin;
+            }
+            from.remove(node);
+        }
+//        for (String node : dest) {
+//            to.remove(node);
+//        }
+        return ans.size() > 0;
+    }
+
+    private static List<String> getPath(List<String> path1, List<String> path2, boolean isOrder){
+        List<String> path = new ArrayList<>();
+        if (isOrder){
+            path.addAll(path1);
+            for (int i = path2.size() - 1; i >= 0 ; i--) {
+                path.add(path2.get(i));
+            }
+        }else {
+            path.addAll(path2);
+            for (int i = path1.size() - 1; i >= 0 ; i--) {
+                path.add(path1.get(i));
+            }
+        }
+        return path;
+    }
+
+    private static List<String> copyStringList(List<String> src){
+        List<String> dest = new ArrayList<>();
+        dest.addAll(src);
+        return dest;
+    }
+
     public static void main(String[] args) {
+        String b = "magic";
+        String e = "pearl";
+        String testPos = "testcase.txt";
+        List<String> words = ReadCase.readTestCase(testPos);
+        List<List<String>> ans = findLadders(b, e, words);
+        PrintUtil.printListInList(ans);
         String begin = "hit";
         String end = "cog";
         List<String> wordList = new ArrayList<>();
@@ -259,4 +353,11 @@ public class WordLadder {
         wordList.add("los");
         System.out.println(ladderLengthImproveII(begin, end, wordList));
     }
+    /*
+    magic manic mania maria maris marks parks perks peaks pears pearl
+    magic manic mania maria maris paris parks perks peaks pears pearl
+    magic manic mania maria marta marty marry parry perry peary pearl
+    magic manic mania maria marta marty party parry perry peary pearl
+
+    magic,manic,mania,maria,marta,marty,marry,merry,perry,peary,pearl  */
 }
