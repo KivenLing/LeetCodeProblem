@@ -191,7 +191,7 @@ public class WordLadder {
         begin.clear();
         begin.addAll(toAdd);
         return false;
-    } 
+    }
 
 
     //只有一个字母不同，但是顺序可以不同，与题目不符合
@@ -275,7 +275,7 @@ public class WordLadder {
     private static boolean convert(Map<String, List<String>> from, Map<String, List<String>> to, Set<String> words, List<List<String>> ans, boolean isOrder){
         List<String> nodes = new ArrayList<>(from.keySet());
         //最后需要在另外一段删除的节点，
- //       List<String> dest = new LinkedList<>();
+        //       List<String> dest = new LinkedList<>();
         //遍历节点
         for (String node : nodes) {
             char[] nodeChars = node.toCharArray();
