@@ -49,13 +49,27 @@ public class TreeNodesCount {
     }
 
     /**
-     * 优化todo
+     * 优化思路：左右子树分别统计,迭代速度更快  48ms，leetcode最优思路
      * @param root 完全二叉树根节点
      * @return 节点数目
      */
     public static int countNodesIII(TreeNode root){
-        //todo
-        return 0;
+        int nodeCount = 0;
+        int h = getHeight(root);//整个树高度
+        TreeNode cur = root;
+        while (cur != null){//记得验证边界
+            if (getHeight(cur.right) == h - 1){//左右子树最高高度相同，
+                // 左子树为完全二叉树，可以求左子树节点个数
+                nodeCount += 1 << (h - 1);
+                //求完了左子树加根节点个数
+                cur = cur.right;
+            }else {//此时右子树为完全二叉树，同理
+                nodeCount += 1 << (h - 2);
+                cur = cur.left;
+            }
+            h--;
+        }
+        return nodeCount;
     }
 
     //求一般完全二叉树最大高度
