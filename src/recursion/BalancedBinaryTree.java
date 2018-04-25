@@ -31,12 +31,22 @@ public class BalancedBinaryTree {
     }
 
     public static boolean isBalancedImprove(TreeNode root){
-        //todo
+        if (getMaxDepth(root) == -1)
+            return false;
         return true;
     }
 
     public static int getMaxDepth(TreeNode root){
-        //todo
-        return 0;
+        if (root == null)
+            return 0;
+        int leftD = getMaxDepth(root.left);
+        int rightD = getMaxDepth(root.right);
+        //高度差大于1
+        if (Math.abs(leftD - rightD) > 1)
+            return -1;
+        //左右子树一旦有不平衡的树，那么整棵树不平衡
+        if (leftD == -1 || rightD == -1)
+            return -1;
+        return Integer.max(leftD, rightD) + 1;
     }
 }
