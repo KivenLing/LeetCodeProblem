@@ -2,10 +2,13 @@ package recursion;
 
 import util.TreeNode;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * @author Kiven Ling
  * 2018/4/18 10:49
- * ID: 112 404
+ * ID: 112 404 113
  */
 public class PathSum {
     /**
@@ -61,4 +64,88 @@ public class PathSum {
             rightSum = sumOfLeftLeaves(root.right);
         return leftSum + rightSum;
     }
+
+    /**
+     * ID：113
+     * Given a binary tree and a sum, find all root-to-leaf paths
+     * where each path's sum equals the given sum.
+     * Note: A leaf is a node with no children.
+     *
+     * Example:
+     * Given the below binary tree and sum = 22,
+     *       5
+     *      / \
+     *     4   8
+     *    /   / \
+     *   11  13  4
+     *  /  \    / \
+     * 7    2  5   1
+     *
+     * @return
+     * [
+     * [5,4,11,2],
+     * [5,8,4,5]
+     * ]
+     */
+    public static List<List<Integer>> pathSum(TreeNode<Integer> root, int sum) {
+        List<List<Integer>> paths = new ArrayList<>();
+        List<Integer> path = new ArrayList<>();
+        pathSumHelper(root, sum, 0, path, paths);
+        return paths;
+    }
+
+    private static void pathSumHelper(TreeNode<Integer> root, int sum, int lastSum, List<Integer> path, List<List<Integer>> ans){
+        if (root == null)
+            return;
+        int sumBefore = lastSum + root.val;
+        path.add(root.val);
+        //路径之和为sum，并且路径是到叶子节点
+        if (sumBefore == sum && root.left == null && root.right == null) {
+            ans.add(path);
+            return;
+        }
+        if (root.left != null){
+            List<Integer> leftPath = new ArrayList<>(path);
+            pathSumHelper(root.left, sum, sumBefore, leftPath, ans);
+        }
+        if (root.right != null){
+            List<Integer> rightPath = new ArrayList<>(path);
+            pathSumHelper(root.right, sum, sumBefore, rightPath, ans);
+        }
+    }
+    /*leetcode 最有解，有待研究
+        public List<List<Integer>> pathSum(TreeNode root, int sum) {
+         List<List<Integer>> res = new ArrayList<>();
+	        if(root == null) {
+	        	return res;
+	        }
+	    List<Integer> curArray = new ArrayList<>();
+	    hasPath(root, sum, 0,  curArray, res );
+	    return res;
+	 }
+	public   void hasPath(TreeNode root, int sum, int cursum,
+			List<Integer> curArray, List<List<Integer>> res) {
+
+		if(root.left == null && root.right ==null) {
+            cursum+=root.val;
+            curArray.add(root.val);
+			if(cursum == sum) {
+				res.add(new ArrayList<Integer>(curArray));
+			}
+			curArray.remove(curArray.size()-1);
+            return;
+		}
+		cursum+=root.val;
+		curArray.add(root.val);
+        if(root.left!=null)
+        {
+            hasPath(root.left, sum, cursum, curArray, res);
+        }
+        if(root.right!=null)
+        {
+            hasPath(root.right, sum, cursum, curArray, res);
+        }
+        curArray.remove(curArray.size()-1);
+    }
+     */
 }
