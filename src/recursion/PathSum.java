@@ -8,7 +8,7 @@ import java.util.List;
 /**
  * @author Kiven Ling
  * 2018/4/18 10:49
- * ID: 112 404 113
+ * ID: 112 404 113 129
  */
 public class PathSum {
     /**
@@ -101,7 +101,8 @@ public class PathSum {
         path.add(root.val);
         //路径之和为sum，并且路径是到叶子节点
         if (sumBefore == sum && root.left == null && root.right == null) {
-            ans.add(path);
+            ans.add(new ArrayList<Integer>(path));
+            path.remove(path.size() - 1);
             return;
         }
         if (root.left != null){
@@ -112,40 +113,54 @@ public class PathSum {
             List<Integer> rightPath = new ArrayList<>(path);
             pathSumHelper(root.right, sum, sumBefore, rightPath, ans);
         }
+        path.remove(path.size() - 1);
     }
-    /*leetcode 最有解，有待研究
-        public List<List<Integer>> pathSum(TreeNode root, int sum) {
-         List<List<Integer>> res = new ArrayList<>();
-	        if(root == null) {
-	        	return res;
-	        }
-	    List<Integer> curArray = new ArrayList<>();
-	    hasPath(root, sum, 0,  curArray, res );
-	    return res;
-	 }
-	public   void hasPath(TreeNode root, int sum, int cursum,
-			List<Integer> curArray, List<List<Integer>> res) {
 
-		if(root.left == null && root.right ==null) {
-            cursum+=root.val;
-            curArray.add(root.val);
-			if(cursum == sum) {
-				res.add(new ArrayList<Integer>(curArray));
-			}
-			curArray.remove(curArray.size()-1);
-            return;
-		}
-		cursum+=root.val;
-		curArray.add(root.val);
-        if(root.left!=null)
-        {
-            hasPath(root.left, sum, cursum, curArray, res);
-        }
-        if(root.right!=null)
-        {
-            hasPath(root.right, sum, cursum, curArray, res);
-        }
-        curArray.remove(curArray.size()-1);
-    }
+    /**
+     * ID:129
+     * Given a binary tree containing digits from 0-9 only,
+     * each root-to-leaf path could represent a number.
+     * An example is the root-to-leaf path 1->2->3 which
+     * represents the number 123.
+     * Find the total sum of all root-to-leaf numbers.
+     * Note: A leaf is a node with no children.
+     * Example:
+     *
+     * Input: [1,2,3]
+     *   1
+     *  / \
+     * 2   3
+     * Output: 25
+     * Explanation:
+     * The root-to-leaf path 1->2 represents the number 12.
+     * The root-to-leaf path 1->3 represents the number 13.
+     * Therefore, sum = 12 + 13 = 25.
      */
+    public static int sumNumbers(TreeNode root) {
+        int sums = 0;
+        if (root == null)
+            return sums;
+        List<Integer> paths = new ArrayList<>();
+        sumNumHelper(root, 0, paths);
+        for (Integer sum : paths) {
+            sums += sum;
+        }
+        return sums;
+    }
+
+    private static void sumNumHelper(TreeNode<Integer> root, int beforeSum, List<Integer> paths){
+        beforeSum = beforeSum * 10 + root.val;
+        if (root.left == null && root.right == null){
+            paths.add(beforeSum);
+            return;
+        }
+        if (root.left != null){
+            sumNumHelper(root.left, beforeSum, paths);
+        }
+        if (root.right != null){
+            sumNumHelper(root.right, beforeSum, paths);
+        }
+    }
+
+    //ID:124 todo
 }
