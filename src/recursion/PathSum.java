@@ -1,5 +1,7 @@
 package recursion;
 
+import util.EnableInteger;
+import util.TreeHelper;
 import util.TreeNode;
 
 import java.util.ArrayList;
@@ -8,7 +10,7 @@ import java.util.List;
 /**
  * @author Kiven Ling
  * 2018/4/18 10:49
- * ID: 112 404 113 129
+ * ID: 112 404 113 129 437
  */
 public class PathSum {
     /**
@@ -162,5 +164,98 @@ public class PathSum {
         }
     }
 
+    /**
+     * ID: 437
+     * You are given a binary tree in which each node contains an integer value.
+     * Find the number of paths that sum to a given value.
+     * The path does not need to start or end at the root or a leaf,
+     * but it must go downwards (traveling only from parent nodes to child nodes).
+     * The tree has no more than 1,000 nodes and the values are
+     * in the range -1,000,000 to 1,000,000.
+     *
+     * Example:
+     * root = [10,5,-3,3,2,null,11,3,-2,null,1], sum = 8
+     *        10
+     *       /  \
+     *      5   -3
+     *     / \    \
+     *    3   2   11
+     *   / \   \
+     *  3  -2   1
+     * Return 3. The paths that sum to 8 are:
+     * 1.  5 -> 3
+     * 2.  5 -> 2 -> 1
+     * 3. -3 -> 11
+     */
+    //效率低， 主要在维护preSumPath上，进行了重复计算
+    public static int pathSumIII(TreeNode root, int sum) {
+        if (root == null)
+            return 0;
+        return pathSumIIIHelper(root, sum, new ArrayList<EnableInteger>());
+    }
+
+    /**
+     *
+     * @param prePathSum list记录树路径中[n - 1 ... i]的和，i 从 0 ~ n - 1
+     */
+    private static int pathSumIIIHelper(TreeNode<Integer> root, int sum, List<EnableInteger> prePathSum){
+        int value = root.val;
+        int count = 0;
+        for (int i = 0; i < prePathSum.size(); i++) {
+            int preSum = prePathSum.get(i).getVal();
+            if (preSum + value == sum)
+                count++;
+            prePathSum.get(i).setVal(preSum + value);
+        }
+        prePathSum.add(new EnableInteger(value));
+        int leftCount = 0;
+        int rightCount = 0;
+        if (root.left != null){
+            leftCount = pathSumIIIHelper(root.left, sum, prePathSum);
+            prePathSum.remove(prePathSum.size() - 1);
+            listAllRemoveNum(prePathSum, root.left.val);
+        }
+        if (root.right != null){
+            rightCount = pathSumIIIHelper(root.right, sum, prePathSum);
+            prePathSum.remove(prePathSum.size() - 1);
+            listAllRemoveNum(prePathSum, root.right.val);
+        }
+        return count + leftCount + rightCount;
+    }
+
+    private static void listAllRemoveNum(List<EnableInteger> list, int num){
+        for (int i = 0; i < list.size(); i++) {
+            int n = list.get(i).getVal();
+            list.get(i).setVal(n - num);
+        }
+    }
+
+    //ID:437 改进
+    //最终33ms，比最优时间多了一倍，去看优化算法
+    public static int pathSumIIIImprove(TreeNode root, int sum){
+        if (root == null)
+            return 0;
+        return findPath(root, sum) + pathSumIIIImprove(root.left, sum) + pathSumIIIImprove(root.right, sum);
+    }
+
+    private static int findPath(TreeNode<Integer> root, int sum){
+        if (root == null)
+            return 0;
+        int value = root.val;
+        int count = 0;
+        if (value == sum)
+            count++;
+        int leftCount = findPath(root.left, sum - value);
+        int rightCount = findPath(root.right, sum - value);
+        return count + leftCount + rightCount;
+    }
+
     //ID:124 todo
+
+    public static void main(String[] args) {
+        String nodes = "10,5,-3,3,2,null,11,3,-2,null,1";
+        TreeNode treeNode = TreeHelper.createTreeByLevel(nodes);
+        int sum = 8;
+        System.out.println(pathSumIIIImprove(treeNode, sum));
+    }
 }
