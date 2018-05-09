@@ -75,18 +75,20 @@ public class BinarySearchTree {
                 //当左右子树都存在时
                 //一种将左子树最大值作为根 (*)
                 //另外一种将右子树最小值作为根
-//                TreeNode pre = root;
-//                TreeNode maxNode = root.left;
-//                while (maxNode.right != null){
-//                    pre = maxNode;
-//                    maxNode = maxNode.right;
-//                }
-//                pre.right = maxNode.left;
-//                maxNode.left = root.left;//这一步当root的左子树只有一个节点时会出现bug
-                //todo
+                //这里是迭代的方法，也可以变成递归
+                TreeNode pre = root;
+                TreeNode maxNode = root.left;
+                while (maxNode.right != null){
+                    pre = maxNode;
+                    maxNode = maxNode.right;
+                }
+                if (maxNode != root.left) {
+                    pre.right = maxNode.left;
+                    maxNode.left = root.left;//这一步当root的左子树只有一个节点时会出现bug
+                }
+                maxNode.right = root.right;
+                return maxNode;
             }
-
-
         }
         if (root.val > key)
             root.left = deleteNode(root.left, key);
@@ -121,5 +123,20 @@ public class BinarySearchTree {
         while (tempRoot.right != null)
             tempRoot = tempRoot.right;
         return tempRoot;
+    }
+
+    /**
+     * 删除最大节点root，维护bst
+     * @param root BST中的节点
+     * @return 返回最大结点左子树
+     */
+    private static TreeNode removeMax(TreeNode root){
+        if (root.right == null) {
+            TreeNode leftNode = root.left;
+            root.left = null;
+            return leftNode;
+        }
+        root.right = removeMax(root.right);
+        return root;
     }
 }
