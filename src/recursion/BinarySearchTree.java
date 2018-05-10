@@ -1,11 +1,11 @@
 package recursion;
 
-import javax.xml.soap.Node;
+import util.ListNode;
 
 /**
  * @author Kiven Ling
  * 2018/5/8 0:31
- * ID:98 450
+ * ID:98 450 108 109
  */
 public class BinarySearchTree {
     /**
@@ -95,6 +95,65 @@ public class BinarySearchTree {
         else //root.val < key
             root.right = deleteNode(root.right, key);
         return root;
+    }
+
+    /**
+     * ID：108
+     * @param nums Given an array where elements are sorted in ascending order,
+     * @return convert it to a height balanced BST.
+     * For this problem, a height-balanced binary tree is defined as
+     * a binary tree in which the depth of the two subtrees of every
+     * node never differ by more than 1.
+     */
+    public static TreeNode sortedArrayToBST(int[] nums) {
+        if (nums.length == 0)
+            return null;
+        return sortedArrayToBST(nums, 0, nums.length - 1);
+    }
+
+    private static TreeNode sortedArrayToBST(int[] nums, int l, int r){
+        int mid = l + (r - l) / 2;
+        TreeNode root = new TreeNode(nums[mid]);
+        if (l < mid)
+            root.left = sortedArrayToBST(nums, l, mid - 1);
+        if (r > mid)
+            root.right = sortedArrayToBST(nums, mid + 1, r);
+        return root;
+    }
+
+    /**
+     * ID: 109
+     * 和108相同，参数不同
+     */
+    public static TreeNode sortedListToBST(ListNode head) {
+        ListNode mid = findMidNode(head);
+        if (mid == null)
+            return null;
+        TreeNode node =new TreeNode(mid.val);
+        if (mid != head)
+            node.left = sortedListToBST(head);
+        node.right = sortedListToBST(mid.next);
+        return node;
+    }
+
+    /**
+     * 寻找链表的中间节点，并且将中间节点与前一节点分开
+     * @param head 链表头节点
+     * @return 链表的中部节点
+     */
+    private static ListNode findMidNode(ListNode head){
+        if (head == null || head.next == null)
+            return head;
+        ListNode slow = head;
+        ListNode quick = head;
+        ListNode pre = new ListNode();
+        while (quick.next != null && quick.next.next != null){
+            pre = slow;
+            slow = slow.next;
+            quick = quick.next.next;
+        }
+        pre.next = null;
+        return slow;
     }
 
     /**
