@@ -2,10 +2,13 @@ package recursion;
 
 import util.ListNode;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * @author Kiven Ling
  * 2018/5/8 0:31
- * ID:98 450 108 109
+ * ID:98 450 108 109 230 236
  */
 public class BinarySearchTree {
     /**
@@ -156,6 +159,79 @@ public class BinarySearchTree {
         return slow;
     }
 
+    /**
+     * ID: 230
+     * Given a binary search tree, write a function
+     * kthSmallest to find the kth smallest element in it.
+     *
+     * Note:
+     * You may assume k is always valid, 1 ≤ k ≤ BST's total elements.
+     *
+     * Follow up:
+     * What if the BST is modified (insert/delete operations) often
+     * and you need to find the kth smallest frequently?
+     * How would you optimize the kthSmallest routine?
+     */
+    //时间性能差，首先浪费了时间遍历全部的树，这是不必要的，其次map的搜索也比较耗时
+    public static int kthSmallest(TreeNode root, int k) {
+        if (k == 1)
+            return minNode(root).val;
+        Map<TreeNode, Integer> record = new HashMap<>();
+        record.put(null, 0);
+        int count = size(root, record);
+        if (k == count)
+            return maxNode(root).val;
+        return kthSmallestHelper(root, k, record).val;
+    }
+
+    private static TreeNode kthSmallestHelper(TreeNode root, int k, Map<TreeNode, Integer> recordSize){
+        if (k == 1){
+            return minNode(root);
+        }
+        int count = recordSize.get(root);
+        if (k == count){
+            return maxNode(root);
+        }
+        int rank = recordSize.get(root.left) + 1;
+        if (rank > k){
+            return kthSmallestHelper(root.left, k, recordSize);
+        }else if (rank == k){
+            return root;
+        }else {//rank < k
+            return kthSmallestHelper(root.right, k - rank, recordSize);
+        }
+    }
+    //230 优化
+//    int val = 0;
+//    int rank = 0;
+//    public int kthSmallest(TreeNode root, int k) {
+//        travel(root, k);
+//        return val;
+//    }
+//
+//    private void travel(TreeNode root, int k){
+//        if(root == null)
+//            return ;
+//        travel(root.left, k);
+//        rank++;
+//        if(rank == k){
+//            val = root.val;
+//            return;
+//        }
+//        travel(root.right, k);
+//    }
+
+    /**
+     * 求bs的节点个数，并保存结果
+     * @param recordSize 保存树节点个数的Map
+     */
+    private static int size(TreeNode root, Map<TreeNode, Integer> recordSize){
+        if (root == null)
+            return 0;
+        int count = 1 + size(root.left, recordSize) + size(root.right, recordSize);
+        recordSize.put(root, count);
+        return count;
+    }
     /**
      * 求一棵BST树的最小节点
      * @param root BST 根节点
