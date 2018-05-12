@@ -17,7 +17,8 @@ public class LowestCommonAncestor {
      * (where we allow a node to be a descendant of itself).”
      */
     //递归
-    public static TreeNode lowestCommonAncestor(TreeNode root, TreeNode p, TreeNode q){
+    public static TreeNode lowestCommonAncestor(TreeNode root, TreeNode p,
+                                                TreeNode q){
         if (root == null)
             return null;
         if (p.val > root.val && q.val > root.val){//p q 在root的右子树中
@@ -44,6 +45,52 @@ public class LowestCommonAncestor {
             }
         }
         return temp;
+    }
+
+    /**
+     * ID: 236
+     * 和上一题类似，二叉树仅仅是二叉树而不是BST
+     */
+    //803ms 重复遍历树导致性能差
+    public static TreeNode lowestCommonAncestorInBT(TreeNode root, TreeNode p,
+                                                    TreeNode q) {
+        if (root == null || root == p || root == q){
+            return root;
+        }
+        boolean leftContainP = contain(root.left, p);
+        boolean leftContainQ = contain(root.left, q);
+        if (leftContainP && leftContainQ){//p, q节点都在左子树
+            return lowestCommonAncestorInBT(root.left, p, q);
+        }else if (leftContainP || leftContainQ){//p, q分别在左右子树
+            return root;
+        }else {//leftContainP == false leftContainQ == false
+            return lowestCommonAncestorInBT(root.right, p, q);
+        }
+    }
+
+    //ID: 236 改进
+    public static TreeNode lowestCommonAncestorInBTImprove(TreeNode root, TreeNode p,
+                                                           TreeNode q) {
+        if (root == null || root == p || root == q){
+            return root;
+        }
+        TreeNode left = lowestCommonAncestorInBTImprove(root.left, p, q);
+        TreeNode right = lowestCommonAncestorInBTImprove(root.right, p, q);
+        if (left != null && right != null)
+            return root;
+        else {
+            return left != null ? left : right;
+        }
+    }
+    /**
+     * 查看root二叉树是否包含node节点
+     */
+    private static boolean contain(TreeNode root, TreeNode node){
+        if (root == null)
+            return false;
+        if (root == node)
+            return true;
+        return contain(root.left, node) || contain(root.right, node);
     }
 }
 class TreeNode {
