@@ -21,4 +21,15 @@ public class ArrayHelper {
         }
         return arr;
     }
+
+    /**
+     * 对arr[l...r]进行转置
+     */
+    public static void reverse(int[] arr, int l, int r){
+        while (l < r){
+            swap(arr, l, r);
+            l++;
+            r--;
+        }
+    }
 }
