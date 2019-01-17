@@ -75,7 +75,7 @@ public class Combination {
     }
 
     private static void findTarget(int[] candidates, int target, int start,
-                                           List<Integer> store, List<List<Integer>> res){
+                                   List<Integer> store, List<List<Integer>> res){
         if (target == 0){
             res.add(new ArrayList<>(store));
             return;
@@ -113,7 +113,29 @@ public class Combination {
      */
     public static List<List<Integer>> combinationSum2(int[] candidates, int target) {
         List<List<Integer>> res = new ArrayList<>();
-        //todo
+        Arrays.sort(candidates);
+        findTarget2(candidates, target, 0, new ArrayList<Integer>(), res);
         return res;
+    }
+
+    private static void findTarget2(int[] candidates, int target, int start,
+                                    List<Integer> store, List<List<Integer>> res){
+        if (target == 0){
+            res.add(new ArrayList<>(store));
+            return;
+        }
+        for (int i = start; i < candidates.length; i++) {
+            // 跳过重复选择，例如[1, 2, 2, 4]中，第二次选中2，有两种情况：
+            // 当已经选了2，应该继续选择，不应该跳过
+            // 当第一次选2已经递归结束，选择第二个2时，那么应该跳过(因为有2的答案已经全部选择了)
+            // i > start说明在递归树在同一层
+            if (i > start && candidates[i] == candidates[i - 1]) continue;
+            int digit = candidates[i];
+            if (digit <= target){
+                store.add(digit);
+                findTarget2(candidates, target - digit, i + 1, store, res);
+                store.remove(store.size() - 1);
+            }
+        }
     }
 }
