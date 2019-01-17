@@ -7,7 +7,7 @@ import java.util.List;
 /**
  * @author Kiven Ling
  * 2019/1/16 11:33
- * ID: 77, 39, 40
+ * ID: 77, 39, 40, 216
  */
 public class Combination {
     /**
@@ -136,6 +136,46 @@ public class Combination {
                 findTarget2(candidates, target - digit, i + 1, store, res);
                 store.remove(store.size() - 1);
             }
+        }
+    }
+
+    /**
+     * ID: 216
+     * Find all possible combinations of k numbers that add up to a number n,
+     * given that only numbers from 1 to 9 can be used and each combination
+     * should be a unique set of numbers.
+     * Note:
+     * All numbers will be positive integers.
+     * The solution set must not contain duplicate combinations.
+     *
+     * Example 1:
+     * Input: k = 3, n = 7
+     * Output: [[1,2,4]]
+     *
+     * Example 2:
+     * Input: k = 3, n = 9
+     * Output: [[1,2,6], [1,3,5], [2,3,4]]
+     */
+    public static List<List<Integer>> combinationSum3(int k, int n) {
+        assert (k > 0 && k < 10);
+        List<List<Integer>> res = new ArrayList<>();
+        int max = (19 - k) * k / 2;//从1-9选k个数最大和值
+        if (n > max) return res;
+        findTarget3(k, n, 1, new ArrayList<Integer>(), res);
+        return res;
+    }
+
+    private static void findTarget3(int k, int n, int start, ArrayList<Integer> store, List<List<Integer>> res) {
+        if (n < 0) return;
+        if (k > 0){
+            for (int i = start; i < 10; i++) {
+                store.add(i);
+                findTarget3(k - 1, n - i, i + 1 , store, res);
+                store.remove(store.size() - 1);
+            }
+        }else {//k <= 0
+            if (n == 0)
+                res.add(new ArrayList<>(store));
         }
     }
 }
