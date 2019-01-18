@@ -1,6 +1,7 @@
 package recall;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -65,7 +66,19 @@ public class Subsets {
      */
     public static List<List<Integer>> subsetsWithDup(int[] nums) {
         List<List<Integer>> res = new ArrayList<>();
-        //todo
+        Arrays.sort(nums);
+        findSubsetsWithDup(nums, 0, new ArrayList<>(), res);
         return res;
+    }
+
+    private static void findSubsetsWithDup(int[] nums, int start, List<Integer> store,
+                                           List<List<Integer>> res) {
+        res.add(new ArrayList<>(store));
+        for (int i = start; i < nums.length; i++) {
+            if (i > start && nums[i] == nums[i - 1]) continue;
+            store.add(nums[i]);
+            findSubsetsWithDup(nums, i + 1, store, res);
+            store.remove(store.size() - 1);
+        }
     }
 }
