@@ -90,6 +90,50 @@ public class NumberIsland {
      * vertically.
      */
     public static void solve(char[][] board) {
-        //todo
+        if (board.length == 0)
+            return;
+        m = board.length;
+        n = board[0].length;
+        boolean[][] isO = new boolean[m][n];
+        for (int i = 0; i < m; i++) {
+            // 假设都是X
+            Arrays.fill(isO[i], false);
+        }
+        for (int i = 0; i < m; i++) {
+            for (int j = 0; j < n; j++) {
+                // 检查是否应该是'O'
+                checkO(board, isO, i, j);
+            }
+        }
+        for (int i = 0; i < m; i++) {
+            for (int j = 0; j < n; j++) {
+                if (board[i][j] == 'O' && !isO[i][j])
+                    board[i][j] = 'X';
+            }
+        }
+    }
+
+    //检查'O'是否被'X'包围
+    private static void checkO(char[][] board, boolean[][] isO, int i, int j){
+        if (board[i][j] == 'O' && !isO[i][j]) {
+            for (int k = 0; i < 4; k++) {
+                int newX = i + DIRECT[k][0];
+                int newY = j + DIRECT[k][1];
+                if (!inArea(newX, newY)) {//周围不被X包围，说明不符合条件，深度遍历
+                    findUnsurroundedO(board, isO, i, j);
+                    return;//检查是未被包围的O，无需再检查
+                }
+            }
+        }
+    }
+    //深度遍历未被'X'包围的'O'
+    private static void findUnsurroundedO(char[][] board, boolean[][] isO, int x, int y) {
+        isO[x][y] = true;//这里O
+        for (int i = 0; i < 4; i++) {
+            int newX = x + DIRECT[i][0];
+            int newY = y + DIRECT[i][1];
+            if (inArea(newX, newY) && board[newX][newY] == 'O' && !isO[newX][newY])
+                findUnsurroundedO(board, isO, newX, newY);
+        }
     }
 }
