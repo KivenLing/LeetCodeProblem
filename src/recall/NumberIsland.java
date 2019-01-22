@@ -1,11 +1,13 @@
 package recall;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 /**
  * @author Kiven Ling
  * 2019/1/21 16:16
- * ID: 200 130
+ * ID: 200 130 417
  */
 public class NumberIsland {
     private static final int[][] DIRECT = {{-1, 0}, {0, 1}, {1, 0}, {0, -1}};
@@ -135,5 +137,102 @@ public class NumberIsland {
             if (inArea(newX, newY) && board[newX][newY] == 'O' && !isO[newX][newY])
                 findUnsurroundedO(board, isO, newX, newY);
         }
+    }
+
+    /**
+     * ID: 417
+     * Given an m x n matrix of non-negative integers representing the height of each
+     * unit cell in a continent, the "Pacific ocean" touches the left and top edges of
+     * the matrix and the "Atlantic ocean" touches the right and bottom edges.
+     * Water can only flow in four directions (up, down, left, or right) from a cell
+     * to another one with height equal or lower.
+     * Find the list of grid coordinates where water can flow to both the Pacific and
+     * Atlantic ocean.
+     *
+     * Note:
+     * The order of returned grid coordinates does not matter.
+     * Both m and n are less than 150.
+     *
+     * Example:
+     * Given the following 5x5 matrix:
+     * Pacific ~   ~   ~   ~   ~
+     *      ~  1   2   2   3  (5) *
+     *      ~  3   2   3  (4) (4) *
+     *      ~  2   4  (5)  3   1  *
+     *      ~ (6) (7)  1   4   5  *
+     *      ~ (5)  1   1   2   4  *
+     *         *   *   *   *   * Atlantic
+     * Return:
+     * [[0, 4], [1, 3], [1, 4], [2, 2], [3, 0], [3, 1], [4, 0]]
+     * (positions with parentheses in above matrix).
+     */
+    public static List<int[]> pacificAtlantic(int[][] matrix) {
+        List<int[]> res = new ArrayList<>();
+        if (matrix.length == 0)
+            return res;
+        m = matrix.length;
+        n = matrix[0].length;
+        // 分别记录可以流到P和A的陆地
+        boolean[][] flowToP = new boolean[m][n];
+        boolean[][] flowToA = new boolean[m][n];
+        for (int i = 0; i < m; i++) {
+            Arrays.fill(flowToP[i], false);
+            Arrays.fill(flowToA[i], false);
+        }
+        dfsPandA(matrix, flowToP, flowToA, 0, n - 1);
+        dfsPandA(matrix, flowToP, flowToA, m - 1, 0);
+        for (int i = 0; i < m; i++) {
+            dfsPorA(matrix, flowToP, i, 0);
+            dfsPorA(matrix, flowToA, i, n - 1);
+        }
+        for (int i = 0; i < n; i++) {
+            dfsPorA(matrix, flowToP, 0, i);
+            dfsPorA(matrix, flowToA, m - 1, i);
+        }
+        for (int i = 0; i < m; i++) {
+            for (int j = 0; j < n; j++) {
+                if (flowToP[i][j] && flowToA[i][j])
+                    res.add(new int[]{i, j});
+            }
+        }
+        return res;
+    }
+
+    private static void dfsPorA(int[][] matrix, boolean[][] flowToAorP,
+                                int x, int y){
+        flowToAorP[x][y] = true;
+        for (int i = 0; i < 4; i++) {
+            int newX = x + DIRECT[i][0];
+            int newY = y + DIRECT[i][1];
+            if (inArea(newX, newY) && matrix[x][y] <= matrix[newX][newY] &&
+                    !flowToAorP[newX][newY]){
+                dfsPorA(matrix, flowToAorP, newX, newY);
+            }
+        }
+    }
+
+    private static void dfsPandA(int[][] matrix, boolean[][] flowToP, boolean[][] flowToA,
+                                 int x, int y){
+        flowToP[x][y] = true;
+        flowToA[x][y] = true;
+        for (int i = 0; i < 4; i++) {
+            int newX = x + DIRECT[i][0];
+            int newY = y + DIRECT[i][1];
+            if (inArea(newX, newY) && matrix[x][y] <= matrix[newX][newY] &&
+                    (!flowToP[newX][newY] || !flowToA[newX][newY])){
+                dfsPandA(matrix, flowToP, flowToA, newX, newY);
+            }
+        }
+    }
+
+    public static void main(String[] args) {
+        //[[1,2,2,3,5],[3,2,3,4,4],[2,4,5,3,1],[6,7,1,4,5],[5,1,1,2,4]]
+        int[][] matrix = {{1,2,2,3,5},
+                          {3,2,3,4,4},
+                          {2,4,5,3,1},
+                          {6,7,1,4,5},
+                          {5,1,1,2,4}};
+        List<int[]> res = pacificAtlantic(matrix);
+        System.out.println(res.size());
     }
 }
